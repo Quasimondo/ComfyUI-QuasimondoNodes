@@ -1,0 +1,215 @@
+{
+  "last_node_id": 7,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 2,
+      "type": "PreviewImage",
+      "pos": [
+        1086,
+        169
+      ],
+      "size": {
+        "0": 210,
+        "1": 246
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 1,
+      "type": "Custom Shader",
+      "pos": [
+        550,
+        169
+      ],
+      "size": {
+        "0": 455.6706848144531,
+        "1": 630.05029296875
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "texture_0",
+          "type": "IMAGE",
+          "link": 4,
+          "slot_index": 0
+        },
+        {
+          "name": "mask_0",
+          "type": "MASK",
+          "link": null
+        },
+        {
+          "name": "texture_1",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "mask_1",
+          "type": "MASK",
+          "link": null
+        },
+        {
+          "name": "texture_2",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "mask_2",
+          "type": "MASK",
+          "link": null
+        },
+        {
+          "name": "texture_3",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "mask_3",
+          "type": "MASK",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            1
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "mask",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        },
+        {
+          "name": "help",
+          "type": "STRING",
+          "links": [],
+          "shape": 3,
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Custom Shader"
+      },
+      "widgets_values": [
+        1,
+        "Custom",
+        1024,
+        1024,
+        0.451,
+        0,
+        0,
+        0,
+        0,
+        0,
+        "void main() {\n\tvec2 uv_text = gl_FragCoord.xy/u_resolution.xy;\n\tgl_FragColor = texture(texture_0,uv_text+vec2(v0,v1));\n}",
+        "LINEAR",
+        "REPEAT/REPEAT"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "LoadImage",
+      "pos": [
+        127,
+        171
+      ],
+      "size": {
+        "0": 370,
+        "1": 491
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            4
+          ],
+          "shape": 3,
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "Note",
+      "pos": [
+        1084,
+        471
+      ],
+      "size": [
+        388,
+        368
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "properties": {
+        "text": ""
+      },
+      "widgets_values": [
+        "Predefined variables in shader:\n\n    uniform float u_time;        // frame time 0.0 ... 1.0\n    uniform vec2 u_resolution;   // output size in pixels\n    \n    uniform sampler2D texture_0; // input texture_0 if connected\n    uniform sampler2D texture_1; // input texture_1 if connected\n    uniform sampler2D texture_2; // input texture_2 if connected\n    uniform sampler2D texture_3; // input texture_3 if connected    \n            \n    uniform float v0; \n    uniform float v1;\n    uniform float v2;\n    uniform float v3;\n    uniform float v4;\n    uniform float v5;\n    \nIf masks are connected they get merged with their corresponding texture\n\nUse gl_FragColor = vec4(...); to generate output."
+      ],
+      "color": "#432",
+      "bgcolor": "#653"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "IMAGE"
+    ],
+    [
+      4,
+      6,
+      0,
+      1,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}
