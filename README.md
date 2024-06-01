@@ -6,7 +6,8 @@ A collection of various custom nodes for ComfyUI (Work in progress)
 Nodes I wrote mostly for myself since I find it often quicker to write my own solution than trying to find an existing one. I am pretty sure that I will be reinventing the wheel here quite often.
 To be used with [comfyanonymous/ComfyUI](https://github.com/comfyanonymous/ComfyUI) as custom nodes.
 
-## Includes
+### Updates
+June 1st 2024: Added `Video Queue Manager` and `Folder Queue Manager`
 
 ### Nodes
 
