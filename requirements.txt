@@ -3,3 +3,4 @@ torch
 PIL
 moderngl
 torchvision
+opencv-contrib-python
