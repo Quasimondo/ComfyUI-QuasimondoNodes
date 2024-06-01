@@ -69,6 +69,7 @@ class ColorMatch:
             "required": {
                 "image": ("IMAGE",),
                 "reference_image": ("IMAGE",),
+                "blend_factor": ("FLOAT", {"default": 1.0, "min": 0., "max": 2.0, "step": 0.001, "round": 0.001}),
             },
         }
 
@@ -77,7 +78,7 @@ class ColorMatch:
 
     CATEGORY = "image"
 
-    def image_color_blend(self, image, reference_image):
+    def image_color_blend(self, image, reference_image, blend_factor):
         print("image",image.size())
         print("reference_image",reference_image.size())
         if type(image) == list:
@@ -96,5 +97,7 @@ class ColorMatch:
         result = image.clone()
         for i in range(len(image)):
             result[i] = torch.from_numpy(hist_match_rgb(image[i].cpu().numpy(),reference_image[i].cpu().numpy())).to(device=image.device,dtype=image.dtype)
+        
+        result = blend_factor * result + (1.0-blend_factor) * image
         
         return (result, )        
