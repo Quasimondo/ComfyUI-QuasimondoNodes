@@ -12,6 +12,8 @@ To be used with [comfyanonymous/ComfyUI](https://github.com/comfyanonymous/Comfy
 
 * `Custom Shader`: This allows you to integrate your own OpenGL shaders. Even allows to generate animations. (uses the moderngl library)
 * `Spring Mesh`: This node is still very much work in progress - the idea is to distort a mesh using motion maps or flows  (uses the moderngl library)
+* `Video Queue Manager`: This node allows to process an entire folder containing videos one-by-one and frame-by-frame when used in conjunction with auto queue.
+* `Folder Queue Manager`: This node allows to process an entire folder sub-folders one-by-one in conjunction with auto queue.
 
 ## Install
 
