@@ -24,7 +24,15 @@ class ImageBlendMaskBatch:
         #print("image_a",image_a.size())
         #print("image_b",image_b.size())
         #print("mask",mask.size())
-        
+        if type(image_a) == list:
+            image_a = torch.cat(image_a, dim=0)
+
+        if type(image_b) == list:
+            image_b = torch.cat(image_b, dim=0)
+
+        if type(mask) == list:
+            mask = torch.cat(mask, dim=0)
+            
         if len(image_a)!=len(image_b):
             raise ValueError(f"Image_Blend_Mask_Batch: image_a and image_b must have same batch size")
         
