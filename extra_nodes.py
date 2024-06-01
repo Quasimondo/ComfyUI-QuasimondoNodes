@@ -1,4 +1,5 @@
 import torch
+from .colorTransfer import hist_match_rgb
 
 class ImageBlendMaskBatch:
     def __init__(self):
@@ -21,9 +22,9 @@ class ImageBlendMaskBatch:
     CATEGORY = "image"
 
     def image_blend_mask(self, image_a, image_b, mask, blend_percentage):
-        #print("image_a",image_a.size())
-        #print("image_b",image_b.size())
-        #print("mask",mask.size())
+        print("image_a",image_a.size())
+        print("image_b",image_b.size())
+        print("mask",mask.size())
         if type(image_a) == list:
             image_a = torch.cat(image_a, dim=0)
 
@@ -46,11 +47,54 @@ class ImageBlendMaskBatch:
             
         
         if len(mask) < len(image_a):
-            mask = mask.clone().repeat(len(image_a))
+            mask = mask.clone().repeat(len(image_a),1,1,1)
         
         
-        #print("mask after",mask.size())
+        print("mask after",mask.size())
+        
         
         result = image_a * (1.0-(mask*blend_percentage)) + image_b*mask*blend_percentage
         
         return (result, )
+        
+        
+        
+class ColorMatch:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE",),
+                "reference_image": ("IMAGE",),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    FUNCTION = "image_color_blend"
+
+    CATEGORY = "image"
+
+    def image_color_blend(self, image, reference_image):
+        print("image",image.size())
+        print("reference_image",reference_image.size())
+        if type(image) == list:
+            image = torch.cat(image, dim=0)
+
+      
+        if type(reference_image) == list:
+            reference_image = torch.cat(reference_image, dim=0)
+        
+        if len(reference_image)!=1 and len(reference_image)!=len(image):
+            raise ValueError(f"ColorMatch: reference_image must either be a single one or have same batch size as image")
+        
+        if len(reference_image) < len(image):
+            reference_image = reference_image.clone().repeat(len(image),1,1,1)
+        
+        result = image.clone()
+        for i in range(len(image)):
+            result[i] = torch.from_numpy(hist_match_rgb(image[i].cpu().numpy(),reference_image[i].cpu().numpy())).to(device=image.device,dtype=image.dtype)
+        
+        return (result, )        
