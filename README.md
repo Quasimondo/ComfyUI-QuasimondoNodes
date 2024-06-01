@@ -15,6 +15,7 @@ June 1st 2024: Added `Video Queue Manager` and `Folder Queue Manager`
 * `Spring Mesh`: This node is still very much work in progress - the idea is to distort a mesh using motion maps or flows  (uses the moderngl library)
 * `Video Queue Manager`: This node allows to process an entire folder containing videos one-by-one and frame-by-frame when used in conjunction with auto queue.
 * `Folder Queue Manager`: This node allows to process an entire folder sub-folders one-by-one in conjunction with auto queue.
+* `Image Blend Mask (Batch)`: This is just a simple replacement for Image Blend Mask that also works with batches
 
 ## Install
 
