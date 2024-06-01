@@ -1,6 +1,6 @@
 numpy
 torch
-PIL
+Pillow
 moderngl
 torchvision
 opencv-contrib-python
