@@ -2,6 +2,8 @@ import os
 import cv2
 import re
 
+BIGMAX = (2**53-1)
+
 class VideoQueueManager:
     def __init__(self):
         pass
@@ -10,8 +12,9 @@ class VideoQueueManager:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "index": ("INT", {"default": 0, "min": 0}),
+                "index": ("INT", {"default": 0, "min": 0, "max": BIGMAX}),
                 "path":  ("STRING", {"default": '', "multiline": False}),  
+                "batch_size": ("INT", {"default": 1, "min": 1}),
                 "string_decimals":  ("INT", {"default": 4, "min":0, "max":16}),  
             },
         }
@@ -24,7 +27,7 @@ class VideoQueueManager:
 
     
 
-    def exec(self, index, path, string_decimals ):     
+    def exec(self, index, path, batch_size, string_decimals ):     
     
         video_suffixes = ["mp4","avi","mov","wmv","gif","webm","flv","mkv","mpg","avchd"]    
             
@@ -37,7 +40,7 @@ class VideoQueueManager:
                     total_frames = int(video_cap.get(cv2.CAP_PROP_FRAME_COUNT))    
                     video_cap.release()
                     
-                    if cindex+total_frames>index:
+                    if (cindex+total_frames)/batch_size>index:
                         index-=cindex
                         return (path+os.sep+filename,filename,index,str(index).zfill(string_decimals),total_frames ) 
                     cindex += total_frames    
@@ -54,7 +57,7 @@ class FolderQueueManager:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "index": ("INT", {"default": 0, "min": 0}),
+                "index": ("INT", {"default": 0, "min": 0, "max": BIGMAX }),
                 "path":  ("STRING", {"default": '', "multiline": False}),  
                 
             },
