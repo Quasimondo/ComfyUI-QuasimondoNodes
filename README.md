@@ -7,6 +7,7 @@ Nodes I wrote mostly for myself since I find it often quicker to write my own so
 To be used with [comfyanonymous/ComfyUI](https://github.com/comfyanonymous/ComfyUI) as custom nodes.
 
 ### Updates
+June 21st 2024: Added `CPPN Generator`
 June 1st 2024: Added `Video Queue Manager` and `Folder Queue Manager`
 
 ### Nodes
@@ -16,6 +17,7 @@ June 1st 2024: Added `Video Queue Manager` and `Folder Queue Manager`
 * `Video Queue Manager`: This node allows to process an entire folder containing videos one-by-one and frame-by-frame when used in conjunction with auto queue.
 * `Folder Queue Manager`: This node allows to process an entire folder sub-folders one-by-one in conjunction with auto queue.
 * `Image Blend Mask (Batch)`: This is just a simple replacement for Image Blend Mask that also works with batches
+* `CPPN Generator`: A node based on Hardmaru's Compositional Pattern-Producing Networks (CPPN)
 
 ## Install
 
