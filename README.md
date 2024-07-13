@@ -7,6 +7,7 @@ Nodes I wrote mostly for myself since I find it often quicker to write my own so
 To be used with [comfyanonymous/ComfyUI](https://github.com/comfyanonymous/ComfyUI) as custom nodes.
 
 ### Updates
+* July 13th 2024: Added support for image batches as input for Custom Shader textures which allow for example video postprocessing
 * June 28th 2024: Added option to use many Shadertoy (https://www.shadertoy.com/) shaders without conversion
 * June 21st 2024: Added `CPPN Generator`
 * June 1st 2024: Added `Video Queue Manager` and `Folder Queue Manager`
