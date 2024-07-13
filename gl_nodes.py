@@ -168,97 +168,47 @@ class CustomShader:
             fragment_code = convert_from_shadertoy(fragment_code)    
     
 
-        t0 = None
-        if not texture_0 is None:
-            width0 = texture_0[0].size(1)
-            height0 = texture_0[0].size(0)
-            channels0 = texture_0[0].size(2)
-            device0 = texture_0[0].device
-            if not mask_0 is None:
-                t0 = torch.cat((texture_0[0], mask_0[0].unsqueeze(-1)), dim=-1)
-            else:
-                t0 = torch.cat(
-                    (
-                        texture_0[0],
-                        torch.ones(
-                            (height0, width0, 1), dtype=texture_0.dtype, device=device0
+        textures = [texture_0,texture_1,texture_2,texture_3]
+        masks = [mask_0,mask_1,mask_2,mask_3]
+        t = [None,None,None,None]
+        widths = [None,None,None,None]
+        heights = [None,None,None,None]
+        channels = [None,None,None,None]
+        devices = [None,None,None,None]
+        
+        for i in range(4):
+            if not textures[i] is None:
+                widths[i] = textures[i][0].size(1)
+                heights[i] = textures[i][0].size(0)
+                channels[i] = textures[i][0].size(2)
+                devices[i] = textures[i][0].device
+                if not masks[i] is None:
+                    t[i] = torch.cat((textures[i][0], masks[i][0].unsqueeze(-1)), dim=-1)
+                else:
+                    t[i] = torch.cat(
+                        (
+                            textures[i][0],
+                            torch.ones(
+                                (heights[i], widths[i], 1), dtype=textures[i].dtype, device=devices[i]
+                            ),
                         ),
-                    ),
-                    dim=-1,
-                )
-
-        t1 = None
-        if not texture_1 is None:
-            width2 = texture_1[0].size(1)
-            height2 = texture_1[0].size(0)
-            channels2 = texture_1[0].size(2)
-            device2 = texture_1[0].device
-
-            if not mask_1 is None:
-                t1 = torch.cat((texture_1[0], mask_1[0].unsqueeze(-1)), dim=-1)
-            else:
-                t1 = torch.cat(
-                    (
-                        texture_1[0],
-                        torch.ones(
-                            (height2, width2, 1), dtype=texture_1.dtype, device=device2
-                        ),
-                    ),
-                    dim=-1,
-                )
-
-        t2 = None
-        if not texture_2 is None:
-            width3 = texture_2[0].size(1)
-            height3 = texture_2[0].size(0)
-            channels3 = texture_2[0].size(2)
-            device3 = texture_2[0].device
-            if not mask_2 is None:
-                t2 = torch.cat((texture_2[0], mask_2[0].unsqueeze(-1)), dim=-1)
-            else:
-                t2 = torch.cat(
-                    (
-                        texture_2[0],
-                        torch.ones(
-                            (height3, width3, 1), dtype=texture_2.dtype, device=device3
-                        ),
-                    ),
-                    dim=-1,
-                )
-
-        t3 = None
-        if not texture_3 is None:
-            width4 = texture_3[0].size(1)
-            height4 = texture_3[0].size(0)
-            channels4 = texture_3[0].size(2)
-            device4 = texture_3[0].device
-            if not mask_3 is None:
-                t3 = torch.cat((texture_3[0], mask_3[0].unsqueeze(-1)), dim=-1)
-            else:
-                t3 = torch.cat(
-                    (
-                        texture_3[0],
-                        torch.ones(
-                            (height4, width4, 1), dtype=texture_3.dtype, device=device4
-                        ),
-                    ),
-                    dim=-1,
-                )
-
+                        dim=-1,
+                    )
+        
         ctx = moderngl.create_context(standalone=True, backend="egl")
 
-        if output_size == "texture_0" and not t0 is None:
-            width = width0
-            height = height0
-        elif output_size == "texture_1" and not t1 is None:
-            width = width2
-            height = height2
-        elif output_size == "texture_2" and not t2 is None:
-            width = width3
-            height = height3
-        elif output_size == "texture_3" and not t3 is None:
-            width = width4
-            height = height4
+        if output_size == "texture_0" and not t[0] is None:
+            width = widths[0]
+            height = heights[0]
+        elif output_size == "texture_1" and not t[1] is None:
+            width = widths[1]
+            height = heights[1]
+        elif output_size == "texture_2" and not t[2] is None:
+            width = widths[2]
+            height = heights[2]
+        elif output_size == "texture_3" and not t[3] is None:
+            width = widths[3]
+            height = heights[3]
         fbo = ctx.simple_framebuffer((width, height), components=4)
         fbo.use()
 
@@ -279,16 +229,16 @@ class CustomShader:
             precision mediump float;
             
             """
-            + ("uniform sampler2D texture_0;" if not t0 is None else "")
+            + ("uniform sampler2D texture_0;" if not t[0] is None else "")
             + """
             """
-            + ("uniform sampler2D texture_1;" if not t1 is None else "")
+            + ("uniform sampler2D texture_1;" if not t[1] is None else "")
             + """
             """
-            + ("uniform sampler2D texture_2;" if not t2 is None else "")
+            + ("uniform sampler2D texture_2;" if not t[2] is None else "")
             + """
             """
-            + ("uniform sampler2D texture_3;" if not t3 is None else "")
+            + ("uniform sampler2D texture_3;" if not t[3] is None else "")
             + """            
             
             uniform float v0;
@@ -341,52 +291,19 @@ class CustomShader:
 
         ptt = PILToTensor()
         filtered = []
-        masks = []
+        masks_out = []
 
-        if not t0 is None:
-            data = list(t0.flatten().float().cpu().numpy().astype(np.float32))
-            num_frags = width0 * height0 * 4
-            data = struct.pack(f"{num_frags}f", *data)
+        for i in range(4):
+            if not t[i] is None:
+                data = list(t[i].flatten().float().cpu().numpy().astype(np.float32))
+                num_frags = widths[i] * heights[i] * 4
+                data = struct.pack(f"{num_frags}f", *data)
 
-            texture = ctx.texture((width0, height0), 4, data=data, dtype="f4")
-            texture.filter = sampleMode, sampleMode
-            texture.repeat_x = border.split("/")[0] == "REPEAT"
-            texture.repeat_y = border.split("/")[1] == "REPEAT"
-            texture.use(location=0)
-
-        if not t1 is None:
-            data = list(t1.flatten().float().cpu().numpy().astype(np.float32))
-            num_frags = width2 * height2 * 4
-            data = struct.pack(f"{num_frags}f", *data)
-
-            texture2 = ctx.texture((width2, height2), 4, data=data, dtype="f4")
-            texture2.filter = sampleMode, sampleMode
-            texture2.repeat_x = border.split("/")[0] == "REPEAT"
-            texture2.repeat_y = border.split("/")[1] == "REPEAT"
-            texture2.use(location=1)
-
-        if not t2 is None:
-            data = list(t2.flatten().float().cpu().numpy().astype(np.float32))
-            num_frags = width3 * height3 * 4
-            data = struct.pack(f"{num_frags}f", *data)
-
-            texture3 = ctx.texture((width3, height3), 4, data=data, dtype="f4")
-            texture3.filter = sampleMode, sampleMode
-            texture3.repeat_x = border.split("/")[0] == "REPEAT"
-            texture3.repeat_y = border.split("/")[1] == "REPEAT"
-            texture3.use(location=2)
-
-        if not t3 is None:
-            data = list(t3.flatten().float().cpu().numpy().astype(np.float32))
-            num_frags = width4 * height4 * 4
-            data = struct.pack(f"{num_frags}f", *data)
-
-            texture4 = ctx.texture((width4, height4), 4, data=data, dtype="f4")
-            texture4.filter = sampleMode, sampleMode
-            texture4.repeat_x = border.split("/")[0] == "REPEAT"
-            texture4.repeat_y = border.split("/")[1] == "REPEAT"
-            texture4.use(location=3)
-
+                texture = ctx.texture((widths[i], heights[i]), 4, data=data, dtype="f4")
+                texture.filter = sampleMode, sampleMode
+                texture.repeat_x = border.split("/")[0] == "REPEAT"
+                texture.repeat_y = border.split("/")[1] == "REPEAT"
+                texture.use(location=i)
 
         pbar = comfy.utils.ProgressBar(frames)
 
@@ -394,6 +311,30 @@ class CustomShader:
             if comfy.utils.PROGRESS_BAR_ENABLED:
                 pbar.update_absolute(i + 1, frames)
         
+            for j in range(4):
+                if not textures[j] is None and len(textures[j])>1 and i<len(textures[j]):
+                    if not masks[j] is None:
+                        txt = torch.cat((textures[j][min(i,len(textures[j])-1)], masks[j][min(i,len(masks[j])-1)].unsqueeze(-1)), dim=-1)
+                    else:
+                        txt= torch.cat(
+                            (
+                                textures[j][i],
+                                torch.ones(
+                                    (heights[j], widths[j], 1), dtype=textures[j].dtype, device=devices[j]
+                                ),
+                            ),
+                            dim=-1,
+                        )
+                    data = list(txt.flatten().float().cpu().numpy().astype(np.float32))
+                    num_frags = widths[j] * heights[j] * 4
+                    data = struct.pack(f"{num_frags}f", *data)
+
+                    texture = ctx.texture((widths[j], heights[j]), 4, data=data, dtype="f4")
+                    texture.filter = sampleMode, sampleMode
+                    texture.repeat_x = border.split("/")[0] == "REPEAT"
+                    texture.repeat_y = border.split("/")[1] == "REPEAT"
+                    texture.use(location=j) 
+
             try:
                 prog["u_time"].value = (i / frames)*timefactor
             except:
@@ -460,7 +401,7 @@ class CustomShader:
             image = image.permute(1, 2, 0).float().mul(1.0 / 255.0)
 
             filtered.append(image[:, :, :3].unsqueeze(0))
-            masks.append(image[:, :, 3].squeeze().unsqueeze(0))
+            masks_out.append(image[:, :, 3].squeeze().unsqueeze(0))
 
         help = """
 Predefined variables in shader:
@@ -486,7 +427,7 @@ Use gl_FragColor = vec4(...); to generate output.
     
 """
 
-        return (torch.cat(filtered, dim=0), torch.cat(masks, dim=0), help)
+        return (torch.cat(filtered, dim=0), torch.cat(masks_out, dim=0), help)
 
 
 class SpringMesh:
