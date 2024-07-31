@@ -1,8 +1,8 @@
 # pyproject.toml
 [project]
-name = "comfyui-QuasimondoNodes"
+name = "ComfyUI-QuasimondoNodes"
 description = "This repository contains custom nodes for ComfyUI created and used by Mario Klingemann (@Quasimondo on Twitter and Instagram)"
-version = "1.0.1"
+version = "1.0.2"
 license = { file = "LICENSE" }
 dependencies  = []
 
