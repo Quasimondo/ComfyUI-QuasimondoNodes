@@ -7,6 +7,7 @@ Nodes I wrote mostly for myself since I find it often quicker to write my own so
 To be used with [comfyanonymous/ComfyUI](https://github.com/comfyanonymous/ComfyUI) as custom nodes.
 
 ### Updates
+* July 31st 2024: Added image nodes
 * July 13th 2024: Added support for image batches as input for Custom Shader textures which allow for example video postprocessing
 * June 28th 2024: Added option to use many Shadertoy (https://www.shadertoy.com/) shaders without conversion
 * June 21st 2024: Added `CPPN Generator`
@@ -14,6 +15,13 @@ To be used with [comfyanonymous/ComfyUI](https://github.com/comfyanonymous/Comfy
 
 ### Nodes
 
+* `ImageToOpticalFlow`: Converts an image to optical flow representation, allowing users to specify which color channels represent x and y components, and apply scaling and offset.
+* `ShiftMask`: Shifts a mask by a specified x and y offset.
+* `SlitScan`: Applies a slit-scan effect to a sequence of images using masks, allowing for time manipulation and blending.
+* `DistanceMap`: Generates a distance map from a binary mask and returns the coordinates of a point based on the specified mode (max, min, or median distance).
+* `TemporalBlur`: Applies temporal blurring to a sequence of images, considering frames before and after the current frame with a customizable falloff.
+* `PreviewMask`: Generates a preview image of masks and saves them as temporary files for UI display.
+* `CoordinatesFromMask`: Extracts coordinates of points from a mask based on various parameters like percentage, minimum distance from edge, and maximum number of points. It also generates a point mask.
 * `Custom Shader`: This allows you to integrate your own OpenGL shaders. Even allows to generate animations. (uses the moderngl library)
 * `Spring Mesh`: This node is still very much work in progress - the idea is to distort a mesh using motion maps or flows  (uses the moderngl library)
 * `Video Queue Manager`: This node allows to process an entire folder containing videos one-by-one and frame-by-frame when used in conjunction with auto queue.
