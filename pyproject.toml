@@ -2,8 +2,8 @@
 [project]
 name = "comfyui-QuasimondoNodes"
 description = "This repository contains custom nodes for ComfyUI created and used by Mario Klingemann (@Quasimondo on Twitter and Instagram)"
-version = "1.0.0"
-license = { file = "LICENSE.txt" }
+version = "1.0.1"
+license = { file = "LICENSE" }
 dependencies  = []
 
 [project.urls]
